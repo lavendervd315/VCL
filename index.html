@@ -28,15 +28,15 @@
             padding-top: 100px;
         }
 
-        @media only screen and (min-width : 320px) and (min-height : 568px) {
+        @media screen and (min-width: 400px)  and (max-width: 1000px) {
             .button-aw {
                 width: 100%;
                 height: 110px;
-                font-size: xxx-large;
+                font-size: 400%;
             }
 
             .text-size {
-                font-size: xxx-large;
+                font-size: 400%;
             }
 
             .infor {
@@ -93,11 +93,11 @@
             $('#point').text(count + '/' + en.length)
             setTimeout(function () {
                 $('.button-aw').attr("disabled", false);
-				refresh();
-			}, 1500)
+                refresh();
+            }, 1500)
         });
 
-        function refresh(){
+        function refresh() {
             indexTrue = Math.floor(Math.random() * en.length);
             var randomAnswer = Math.floor(Math.random() * 3);
             $("#question").text(en[indexTrue]);
