@@ -9,6 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+        <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
     <style>
         .button-aw {
             width: 40%;
@@ -82,6 +83,9 @@
         var en = [];
         var vn = [];
         var enShowed = [];
+        $( document ).ready(function() {
+            console.log( "ready!" );
+        });
         $(document).on("click", "#enToVn", function () {
             makeApiCall();
             valueDefault();
@@ -146,6 +150,7 @@
             enShowed.push(indexTrue);
 
             $("#question").text(en[indexTrue]);
+            responsiveVoice.speak(en[indexTrue]);
             var randomAnswer = Math.floor(Math.random() * 3);
 
             var awCheck = [];
