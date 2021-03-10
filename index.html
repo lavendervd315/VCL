@@ -75,7 +75,7 @@
                 <input type="button" style="margin-left: 10px;" value="LISTEN" id="Listen"
                     class="btn btn-primary switch-language">
             </div>
-            <div class="text-size d-flex justify-content-center mt-3" id="point"></div>
+            <div class="text-size d-flex justify-content-center mt-3 text-warning" id="point"></div>
             <div class="text-size d-flex justify-content-center" id="desciption"></div>
         </div>
         <div id="content">
@@ -110,29 +110,29 @@
         var vn = [];
         var enShowed = [];
         var status = 1;
+        var from = '';
+        var to = '';
 
         $(document).on("click", "#enToVn", function () {
             status = 1;
-            makeApiCall();
             valueDefault();
+            makeApiCall();
             setTimeout(function () {
-                console.log(sheet1);
                 for (var i = 0; i < sheet1.values.length; i++) {
-                    en.push(sheet1.values[i][2]);
-                    vn.push(sheet1.values[i][3]);
+                    en.push(sheet1.values[i][0]);
+                    vn.push(sheet1.values[i][1]);
                 }
                 refresh()
             }, 1500)
         });
         $(document).on("click", "#Listen", function () {
             status = 3;
-            makeApiCall();
             valueDefault();
+            makeApiCall();
             setTimeout(function () {
-                console.log(sheet1);
                 for (var i = 0; i < sheet1.values.length; i++) {
-                    en.push(sheet1.values[i][2]);
-                    vn.push(sheet1.values[i][3]);
+                    en.push(sheet1.values[i][0]);
+                    vn.push(sheet1.values[i][1]);
                 }
                 refresh()
             }, 1500)
@@ -140,13 +140,12 @@
 
         $(document).on("click", "#vnToEn", function () {
             status = 2;
-            makeApiCall();
             valueDefault();
+            makeApiCall();
             setTimeout(function () {
-                console.log(sheet1);
                 for (var i = 0; i < sheet1.values.length; i++) {
-                    vn.push(sheet1.values[i][2]);
-                    en.push(sheet1.values[i][3]);
+                    vn.push(sheet1.values[i][1]);
+                    en.push(sheet1.values[i][0]);
                 }
                 refresh()
             }, 1500)
@@ -166,6 +165,8 @@
             countAll = 0;
             en = [];
             vn = [];
+            from = prompt("From:", "");
+            to = prompt("To:", "");
         }
 
         $(document).on("click", ".button-aw", function () {
@@ -187,7 +188,7 @@
                 $('#desciption').html('<span class="text-danger">&nbsp;Sai&nbsp;</span>:&nbsp;<span class="text-danger">' + desciption + '</span>');
             }
 
-            $('#point').text(countTrue + '/' + countAll + '(' + en.length + ')');
+            $('#point').text(countTrue + '/' + countAll + ' | ' + from + '->'+ to +' | ' + 'Total: ' + en.length);
             setTimeout(function () {
                 $('.button-aw').attr("disabled", false);
                 if (enShowed.length == en.length) {
@@ -236,7 +237,8 @@
         function makeApiCall() {
             var params = {
                 spreadsheetId: getUrlParameter('id'),
-                range: 'Saved translations - English - Vietnamese',
+                range: 'C'+ from +':D' + to,
+                majorDimension: 'ROWS'
             };
 
             var request = gapi.client.sheets.spreadsheets.values.get(params);
