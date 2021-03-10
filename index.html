@@ -109,12 +109,12 @@
         var en = [];
         var vn = [];
         var enShowed = [];
-        var status = 1;
+        var status = '1';
         var from = '';
         var to = '';
 
         $(document).on("click", "#enToVn", function () {
-            status = 1;
+            status = '1';
             valueDefault();
             makeApiCall();
             setTimeout(function () {
@@ -123,40 +123,41 @@
                     vn.push(sheet1.values[i][1]);
                 }
                 refresh()
-            }, 1500)
-        });
-        $(document).on("click", "#Listen", function () {
-            status = 3;
-            valueDefault();
-            makeApiCall();
-            setTimeout(function () {
-                for (var i = 0; i < sheet1.values.length; i++) {
-                    en.push(sheet1.values[i][0]);
-                    vn.push(sheet1.values[i][1]);
-                }
-                refresh()
-            }, 1500)
+            }, 2000)
         });
 
         $(document).on("click", "#vnToEn", function () {
-            status = 2;
+            status = '2';
             valueDefault();
             makeApiCall();
             setTimeout(function () {
                 for (var i = 0; i < sheet1.values.length; i++) {
-                    vn.push(sheet1.values[i][1]);
-                    en.push(sheet1.values[i][0]);
+                    en.push(sheet1.values[i][1]);
+                    vn.push(sheet1.values[i][0]);
                 }
                 refresh()
-            }, 1500)
+            }, 2000)
+        });
+
+        $(document).on("click", "#Listen", function () {
+            status = '3';
+            valueDefault();
+            makeApiCall();
+            setTimeout(function () {
+                for (var i = 0; i < sheet1.values.length; i++) {
+                    en.push(sheet1.values[i][0]);
+                    vn.push(sheet1.values[i][1]);
+                }
+                refresh()
+            }, 2000)
         });
 
         $(document).on("click", ".questionContent", function () {
-            var voiceText = $(this).text();
-            if (voiceText == '') {
-                responsiveVoice.speak($(this).attr('content'));
-            }
-            responsiveVoice.speak(voiceText);
+            responsiveVoice.speak($(this).text());
+        });
+
+        $(document).on("click", "#repeat", function () {
+            responsiveVoice.speak($(this).attr('content'));
         });
 
         function valueDefault() {
@@ -174,11 +175,11 @@
             $('.button-aw').attr("disabled", true);
             var desciption = '';
 
-            if (status == 2) {
+            if (status == '2') {
                 responsiveVoice.speak(vn[indexTrue]);
-                desciption = en[indexTrue] + '&nbsp; = &nbsp;' + '<span class="questionContent">' + vn[indexTrue] + '</span>';
+                desciption = en[indexTrue] + '&nbsp; = &nbsp;' +  '<span class="questionContent">' + vn[indexTrue] + '</span>';
             } else {
-                desciption = '<span class="questionContent">' + en[indexTrue] + '</span>' + '&nbsp; = &nbsp;' + vn[indexTrue];
+                desciption = '<span class="questionContent">' + en[indexTrue] + '</span>'  + '&nbsp; = &nbsp;' + vn[indexTrue];
             }
 
             if (indexTrue == $(this).attr('index')) {
@@ -205,12 +206,12 @@
                 indexTrue = Math.floor(Math.random() * en.length);
             } while ($.inArray(indexTrue, enShowed) > -1);
             enShowed.push(indexTrue);
-            if (status != 3) {
+            if (status != '3') {
                 $("#question").html('<span class="questionContent">' + en[indexTrue] + '</span>');
             } else {
-                $("#question").html('<input type="button" value="Repeat" id="repeat" class="questionContent btn btn-info" content="' + en[indexTrue] + '">');
+                $("#question").html('<input type="button" value="Repeat" id="repeat" class="btn btn-info" content="' + en[indexTrue] + '">');
             }
-            if (status != 2) {
+            if (status != '2') {
                 responsiveVoice.speak(en[indexTrue]);
             }
 
