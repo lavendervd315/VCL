@@ -69,8 +69,11 @@
                 <div class="w-100 d-flex justify-content-center mb-2">
                     <input type="button" class="btn btn-outline-primary button-aw" id="answer2" value="C" index="" />
                 </div>
-                <div class="w-100 d-flex justify-content-center">
+                <div class="w-100 d-flex justify-content-center mb-2">
                     <input type="button" class="btn btn-outline-primary button-aw" id="answer3" value="D" index="" />
+                </div>
+                <div class="w-100 d-flex justify-content-center">
+                    <input type="button" class="btn btn-outline-primary button-aw" id="answer4" value="E" index="" />
                 </div>
             </div>
         </div>
@@ -130,9 +133,12 @@
         $(document).on("click", ".button-aw", function () {
             countAll++;
             $('.button-aw').attr("disabled", true);
-            var desciption = en[indexTrue] + '&nbsp; = &nbsp;' + '<span class="questionContent">' + vn[indexTrue] + '</span>';
+            var desciption = '';
             if (!isEn) {
                 responsiveVoice.speak(vn[indexTrue]);
+                desciption = en[indexTrue] + '&nbsp; = &nbsp;' + '<span class="questionContent">' + vn[indexTrue] + '</span>';
+            } else {
+                desciption = '<span class="questionContent">' + en[indexTrue] + '</span>' + '&nbsp; = &nbsp;' + vn[indexTrue] ;
             }
             if (indexTrue == $(this).attr('index')) {
                 countTrue++;
@@ -159,13 +165,13 @@
             enShowed.push(indexTrue);
 
             $("#question").html('<span class="questionContent">' + en[indexTrue] + '</span>');
-            
+
             if (isEn) {
                 responsiveVoice.speak(en[indexTrue]);
             }
 
             var awCheck = [];
-            var n = 4;
+            var n = 5;
             var j = 0;
             for (var i = 0; i < n; i++) {
                 var random = Math.floor(Math.random() * vn.length);
@@ -179,7 +185,7 @@
                 }
             }
 
-            var randomAnswer = Math.floor(Math.random() * 3);
+            var randomAnswer = Math.floor(Math.random() * 4);
             $("#answer" + randomAnswer).val(vn[indexTrue]);
             $("#answer" + randomAnswer).attr("index", indexTrue);
         }
