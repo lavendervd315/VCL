@@ -25,6 +25,14 @@
             padding-top: 100px;
         }
 
+        #repeat {
+            width: 200px
+        }
+
+        .switch-language {
+            width: 20%;
+        }
+
         @media screen and (min-width: 400px) and (max-width: 1000px) {
             .button-aw {
                 width: 100%;
@@ -40,6 +48,19 @@
                 height: 40vh;
                 padding-top: 100px;
             }
+
+            #repeat {
+                width: 300px;
+                height: 70px;
+                font-size: 50%;
+                color: WHITE;
+            }
+
+            .switch-language {
+                width: 27%;
+                height: 55px;
+                font-size: 40%;
+            }
         }
     </style>
 </head>
@@ -48,9 +69,11 @@
     <div class="justify-content-center">
         <div class="infor">
             <div class="text-size d-flex justify-content-center">
-                <input type="button" style="width: 20%;" value="English -> VietNam" id="enToVn" class="btn btn-primary">
-                <input type="button" style="width: 20%; margin-left: 10px;" value="VietNam -> English" id="vnToEn"
-                    class="btn btn-primary">
+                <input type="button" value="EN -> VN" id="enToVn" class="btn btn-primary switch-language">
+                <input type="button" style="margin-left: 10px;" value="VN -> EN" id="vnToEn"
+                    class="btn btn-primary switch-language">
+                <input type="button" style="margin-left: 10px;" value="LISTEN" id="Listen"
+                    class="btn btn-primary switch-language">
             </div>
             <div class="text-size d-flex justify-content-center mt-3" id="point"></div>
             <div class="text-size d-flex justify-content-center" id="desciption"></div>
@@ -86,12 +109,23 @@
         var en = [];
         var vn = [];
         var enShowed = [];
-        var isEn = true;
-        $(document).ready(function () {
-            console.log("ready!");
-        });
+        var status = 1;
+
         $(document).on("click", "#enToVn", function () {
-            isEn = true;
+            status = 1;
+            makeApiCall();
+            valueDefault();
+            setTimeout(function () {
+                console.log(sheet1);
+                for (var i = 0; i < sheet1.values.length; i++) {
+                    en.push(sheet1.values[i][2]);
+                    vn.push(sheet1.values[i][3]);
+                }
+                refresh()
+            }, 1500)
+        });
+        $(document).on("click", "#Listen", function () {
+            status = 3;
             makeApiCall();
             valueDefault();
             setTimeout(function () {
@@ -105,7 +139,7 @@
         });
 
         $(document).on("click", "#vnToEn", function () {
-            isEn = false;
+            status = 2;
             makeApiCall();
             valueDefault();
             setTimeout(function () {
@@ -119,7 +153,11 @@
         });
 
         $(document).on("click", ".questionContent", function () {
-            responsiveVoice.speak($(this).text());
+            var voiceText = $(this).text();
+            if (voiceText == '') {
+                responsiveVoice.speak($(this).attr('content'));
+            }
+            responsiveVoice.speak(voiceText);
         });
 
         function valueDefault() {
@@ -134,18 +172,21 @@
             countAll++;
             $('.button-aw').attr("disabled", true);
             var desciption = '';
-            if (!isEn) {
+
+            if (status == 2) {
                 responsiveVoice.speak(vn[indexTrue]);
                 desciption = en[indexTrue] + '&nbsp; = &nbsp;' + '<span class="questionContent">' + vn[indexTrue] + '</span>';
             } else {
-                desciption = '<span class="questionContent">' + en[indexTrue] + '</span>' + '&nbsp; = &nbsp;' + vn[indexTrue] ;
+                desciption = '<span class="questionContent">' + en[indexTrue] + '</span>' + '&nbsp; = &nbsp;' + vn[indexTrue];
             }
+
             if (indexTrue == $(this).attr('index')) {
                 countTrue++;
                 $('#desciption').html('<span class="text-success">&nbsp;Đúng&nbsp;</span>:&nbsp;<span class="text-success">' + desciption + '</span>');
             } else {
                 $('#desciption').html('<span class="text-danger">&nbsp;Sai&nbsp;</span>:&nbsp;<span class="text-danger">' + desciption + '</span>');
             }
+
             $('#point').text(countTrue + '/' + countAll + '(' + en.length + ')');
             setTimeout(function () {
                 $('.button-aw').attr("disabled", false);
@@ -163,10 +204,12 @@
                 indexTrue = Math.floor(Math.random() * en.length);
             } while ($.inArray(indexTrue, enShowed) > -1);
             enShowed.push(indexTrue);
-
-            $("#question").html('<span class="questionContent">' + en[indexTrue] + '</span>');
-
-            if (isEn) {
+            if (status != 3) {
+                $("#question").html('<span class="questionContent">' + en[indexTrue] + '</span>');
+            } else {
+                $("#question").html('<input type="button" value="Repeat" id="repeat" class="questionContent btn btn-info" content="' + en[indexTrue] + '">');
+            }
+            if (status != 2) {
                 responsiveVoice.speak(en[indexTrue]);
             }
 
