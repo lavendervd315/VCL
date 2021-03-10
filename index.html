@@ -157,11 +157,12 @@
                 indexTrue = Math.floor(Math.random() * en.length);
             } while ($.inArray(indexTrue, enShowed) > -1);
             enShowed.push(indexTrue);
+
             $("#question").html('<span class="questionContent">' + en[indexTrue] + '</span>');
+            
             if (isEn) {
                 responsiveVoice.speak(en[indexTrue]);
             }
-            var randomAnswer = Math.floor(Math.random() * 3);
 
             var awCheck = [];
             var n = 4;
@@ -177,6 +178,8 @@
                     n++;
                 }
             }
+
+            var randomAnswer = Math.floor(Math.random() * 3);
             $("#answer" + randomAnswer).val(vn[indexTrue]);
             $("#answer" + randomAnswer).attr("index", indexTrue);
         }
